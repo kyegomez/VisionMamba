@@ -27,7 +27,12 @@ class VisionMambaBlock(nn.Module):
     """
 
     def __init__(
-        self, dim: int, heads: int, dt_rank: int, dim_inner: int, d_state: int
+        self,
+        dim: int,
+        heads: int,
+        dt_rank: int,
+        dim_inner: int,
+        d_state: int,
     ):
         super().__init__()
         self.dim = dim
@@ -66,7 +71,9 @@ class VisionMambaBlock(nn.Module):
         # forward con1d
         x1_rearranged = rearrange(x1, "b s d -> b d s")
         forward_conv_output = self.forward_conv1d(x1_rearranged)
-        forward_conv_output = rearrange(forward_conv_output, "b d s -> b s d")
+        forward_conv_output = rearrange(
+            forward_conv_output, "b d s -> b s d"
+        )
         x1_ssm = self.ssm(forward_conv_output)
 
         # backward conv x2
