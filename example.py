@@ -3,7 +3,7 @@ import torch
 from vision_mamba.model import VisionMambaBlock
 
 # Create a random tensor of shape (1, 512, 512)
-x = torch.randn(1, 512, 512)
+x = torch.randn(1, 512, 1024)
 
 # Create an instance of the VisionMambaBlock model
 # Parameters:
@@ -13,7 +13,7 @@ x = torch.randn(1, 512, 512)
 # - dim_inner: The inner dimension of the model
 # - d_state: The state dimension of the model
 model = VisionMambaBlock(
-    dim=512, heads=8, dt_rank=32, dim_inner=512, d_state=256
+    dim=1024, heads=8, dt_rank=32, dim_inner=512, d_state=256
 )
 
 # Pass the input tensor through the model

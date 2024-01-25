@@ -1,7 +1,7 @@
 import torch
 from einops import rearrange
 from torch import nn
-from zeta.nn.modules.ssm import SSM
+from zeta.nn import SSM
 
 
 class VisionMambaBlock(nn.Module):
