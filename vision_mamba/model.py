@@ -14,12 +14,14 @@ class VisionMambaBlock(nn.Module):
         dim (int): The input dimension of the input tensor.
         heads (int): The number of heads in the multi-head attention mechanism.
         dt_rank (int): The rank of the state space model.
-        dim_inner (int): The dimension of the inner layer of the multi-head attention.
+        dim_inner (int): The dimension of the inner layer of the 
+            multi-head attention.
         d_state (int): The dimension of the state space model.
 
 
     Example:
-    >>> block = VisionMambaBlock(dim=256, heads=8, dt_rank=32, dim_inner=512, d_state=256)
+    >>> block = VisionMambaBlock(dim=256, heads=8, dt_rank=32, 
+            dim_inner=512, d_state=256)
     >>> x = torch.randn(1, 32, 256)
     >>> out = block(x)
     >>> out.shape
