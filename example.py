@@ -1,3 +1,4 @@
+"""Example of using the VisionMambaBlock model"""
 # Import the necessary libraries
 import torch
 from vision_mamba.model import VisionMambaBlock
