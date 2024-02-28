@@ -20,6 +20,7 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+        run: pip intall autopep8
 
       - name: Find Python files
         run: find vision_mamba -name "*.py" -type f -exec autopep8 --in-place --aggressive --aggressive {} +
