@@ -6,17 +6,17 @@ x = torch.randn(1, 3, 224, 224)
 
 # Create an instance of the Vim model
 model = Vim(
-    dim=256,
-    heads=8,
-    dt_rank=32,
-    dim_inner=256,
-    d_state=256,
-    num_classes=1000,
-    image_size=224,
-    patch_size=16,
-    channels=3,
-    dropout=0.1,
-    depth=12,
+    dim=256,  # Dimension of the model
+    heads=8,  # Number of attention heads
+    dt_rank=32,  # Rank of the dynamic routing tensor
+    dim_inner=256,  # Inner dimension of the model
+    d_state=256,  # State dimension of the model
+    num_classes=1000,  # Number of output classes
+    image_size=224,  # Size of the input image
+    patch_size=16,  # Size of the image patch
+    channels=3,  # Number of input channels
+    dropout=0.1,  # Dropout rate
+    depth=12,  # Depth of the model
 )
 
 # Perform a forward pass through the model
