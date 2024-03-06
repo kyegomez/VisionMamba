@@ -14,44 +14,37 @@ pip install vision-mamba
 # Usage
 ```python
 
-# Import the necessary libraries
 import torch
-from vision_mamba.model import VisionMambaBlock
+from vision_mamba.model import Vim
 
-# Create a random tensor of shape (1, 512, 512)
-x = torch.randn(1, 512, 512)
+# Create a random tensor
+x = torch.randn(1, 3, 224, 224)
 
-# Create an instance of the VisionMambaBlock model
-# Parameters:
-# - dim: The input dimension
-# - heads: The number of attention heads
-# - dt_rank: The rank of the dynamic tensor
-# - dim_inner: The inner dimension of the model
-# - d_state: The state dimension of the model
-model = VisionMambaBlock(
-    dim=512, heads=8, dt_rank=32, dim_inner=512, d_state=256
+# Create an instance of the Vim model
+model = Vim(
+    dim=256,
+    heads=8,
+    dt_rank=32,
+    dim_inner=256,
+    d_state=256,
+    num_classes=1000,
+    image_size=224,
+    patch_size=16,
+    channels=3,
+    dropout=0.1,
+    depth=12,
 )
 
-# Pass the input tensor through the model
+# Perform a forward pass through the model
 out = model(x)
 
-# Print the shape of the output tensor
+# Print the shape and output of the forward pass
+print(out.shape)
 print(out)
+
 
 ```
 
-
-
-### Code Quality 🧹
-
-- `make style` to format the code
-- `make check_code_quality` to check code quality (PEP8 basically)
-- `black .`
-- `ruff . --fix`
-
-### Tests 🧪
-
-[`pytests`](https://docs.pytest.org/en/7.1.x/) is used to run our tests.
 
 
 ## Citation
@@ -70,3 +63,6 @@ print(out)
 MIT
 
 
+# Todo
+- [ ] Fix the encoder block with the forward and backward convolutions
+- [ ] Make a training script for imagenet
