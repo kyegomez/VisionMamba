@@ -75,7 +75,7 @@ class VisionEncoderMambaBlock(nn.Module):
             in_channels=dim, out_channels=dim, kernel_size=1
         )
         self.norm = nn.LayerNorm(dim)
-        self.activation = nn.SiLU()
+        self.silu = nn.SiLU()
         self.ssm = SSM(dim, dt_rank, dim_inner, d_state)
 
         # Linear layer for z and x
@@ -85,7 +85,6 @@ class VisionEncoderMambaBlock(nn.Module):
         self.softplus = nn.Softplus()
 
     def forward(self, x: torch.Tensor):
-        # x is of shape [batch_size, seq_len, dim]
         b, s, d = x.shape
 
         # Skip connection
@@ -99,35 +98,41 @@ class VisionEncoderMambaBlock(nn.Module):
         x1 = self.proj(x)
 
         # forward con1d
-        x1_rearranged = rearrange(x1, "b s d -> b d s")
-        forward_conv_output = self.forward_conv1d(x1_rearranged)
-        forward_conv_output = rearrange(
-            forward_conv_output, "b d s -> b s d"
+        x1 = self.process_direction(
+            x,
+            self.forward_conv1d,
+            self.ssm,
         )
-        x1_ssm = self.ssm(forward_conv_output)
 
-        # backward conv x2
-        x2_rearranged = rearrange(x1, "b s d -> b d s")
-        x2 = self.backward_conv1d(x2_rearranged)
-        x2 = rearrange(x2, "b d s -> b s d")
-
-        # Backward ssm
-        x2 = self.ssm(x2)
+        # backward conv1d
+        x2 = self.process_direction(
+            x,
+            self.backward_conv1d,
+            self.ssm,
+        )
 
         # Activation
-        z = self.activation(z1)
+        z = self.silu(z1)
 
-        # matmul with z + backward ssm
-        x2 = x2 @ z
+        # Matmul
+        x1 *= z
+        x2 *= z
 
-        # Matmul with z and x1
-        x1 = x1_ssm @ z
+        # Residual connection
+        return x1 + x2 + skip
 
-        # Add both matmuls
-        x = x1 + x2
-
-        # Add skip connection
-        return x + skip
+    def process_direction(
+        self,
+        x: Tensor,
+        conv1d: nn.Conv1d,
+        ssm: SSM,
+    ):
+        x = rearrange(x, "b s d -> b d s")
+        x = self.softplus(conv1d(x))
+        print(f"Conv1d: {x}")
+        x = rearrange(x, "b d s -> b s d")
+        x = ssm(x)
+        return x
 
 
 class Vim(nn.Module):
@@ -270,5 +275,3 @@ class Vim(nn.Module):
 
         # Output head with the cls tokens
         return self.output_head(x)
-
-
