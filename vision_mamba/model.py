@@ -95,7 +95,7 @@ class VisionEncoderMambaBlock(nn.Module):
 
         # Split x into x1 and x2 with linears
         z1 = self.proj(x)
-        x1 = self.proj(x)
+        x = self.proj(x)
 
         # forward con1d
         x1 = self.process_direction(
