@@ -39,7 +39,6 @@ class VisionEncoderMambaBlock(nn.Module):
 
     Args:
         dim (int): The input dimension of the input tensor.
-        heads (int): The number of heads in the multi-head attention mechanism.
         dt_rank (int): The rank of the state space model.
         dim_inner (int): The dimension of the inner layer of the
             multi-head attention.
@@ -58,14 +57,12 @@ class VisionEncoderMambaBlock(nn.Module):
     def __init__(
         self,
         dim: int,
-        heads: int,
         dt_rank: int,
         dim_inner: int,
         d_state: int,
     ):
         super().__init__()
         self.dim = dim
-        self.heads = heads
         self.dt_rank = dt_rank
         self.dim_inner = dim_inner
         self.d_state = d_state
@@ -143,7 +140,6 @@ class Vim(nn.Module):
 
     Args:
         dim (int): Dimension of the model.
-        heads (int, optional): Number of attention heads. Defaults to 8.
         dt_rank (int, optional): Rank of the dynamic tensor. Defaults to 32.
         dim_inner (int, optional): Inner dimension of the model. Defaults to None.
         d_state (int, optional): State dimension of the model. Defaults to None.
@@ -156,7 +152,6 @@ class Vim(nn.Module):
 
     Attributes:
         dim (int): Dimension of the model.
-        heads (int): Number of attention heads.
         dt_rank (int): Rank of the dynamic tensor.
         dim_inner (int): Inner dimension of the model.
         d_state (int): State dimension of the model.
@@ -178,7 +173,6 @@ class Vim(nn.Module):
     def __init__(
         self,
         dim: int,
-        heads: int = 8,
         dt_rank: int = 32,
         dim_inner: int = None,
         d_state: int = None,
@@ -193,7 +187,6 @@ class Vim(nn.Module):
     ):
         super().__init__()
         self.dim = dim
-        self.heads = heads
         self.dt_rank = dt_rank
         self.dim_inner = dim_inner
         self.d_state = d_state
@@ -234,7 +227,6 @@ class Vim(nn.Module):
             self.layers.append(
                 VisionEncoderMambaBlock(
                     dim=dim,
-                    heads=heads,
                     dt_rank=dt_rank,
                     dim_inner=dim_inner,
                     d_state=d_state,
