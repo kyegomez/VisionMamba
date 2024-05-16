@@ -5,6 +5,7 @@ from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from torch import nn, Tensor
 from zeta.nn import SSM
+from einops.layers.torch import Reduce
 
 
 # Pair
@@ -24,6 +25,7 @@ def output_head(dim: int, num_classes: int):
         nn.Sequential: The output head module.
     """
     return nn.Sequential(
+        Reduce("b s d -> b d", "mean"),
         nn.LayerNorm(dim),
         nn.Linear(dim, num_classes),
     )
@@ -272,6 +274,8 @@ class Vim(nn.Module):
 
         # Latent
         x = self.to_latent(x)
+
+        # x = reduce(x, "b s d -> b d", "mean")
 
         # Output head with the cls tokens
         return self.output_head(x)
